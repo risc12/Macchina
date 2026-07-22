@@ -1,0 +1,310 @@
+# channel	label	captured_ids
+0	(skip)	
+1	(skip)	
+2	(skip)	
+3	(skip)	
+4	Pad 1	
+3	(skip)	
+3	(skip)	
+4	Pad 1: Red	pad 12
+5	Pad 1: Green	pad 12
+6	Pad 1: Blue	pad 12
+7	Pad 2: Red	pad 13
+8	Pad 2: Green	
+9	Pad 2: Blue	
+10	Pad 3: Red	
+# channel	label	captured_ids
+0	(skip)	
+1	(skip)	
+2	(skip)	
+3	(skip)	
+4	(skip)	
+5	(skip)	
+6	(skip)	
+7	(skip)	
+8	(skip)	
+9	(skip)	
+10	(skip)	
+11	(skip)	
+12	(skip)	
+13	(skip)	
+14	(skip)	
+15	(skip)	
+16	(skip)	
+17	(skip)	
+18	(skip)	
+19	(skip)	
+20	(skip)	
+21	(skip)	
+22	(skip)	
+23	(skip)	
+24	(skip)	
+25	(skip)	
+26	(skip)	
+27	(skip)	
+28	(skip)	
+29	(skip)	
+30	(skip)	
+31	(skip)	
+32	(skip)	
+33	(skip)	
+34	(skip)	
+21	(skip)	
+22	(skip)	
+23	(skip)	
+24	(skip)	
+25	(skip)	
+26	(skip)	
+27	(skip)	
+28	Pad 1: White	
+29	Pad 2: White	
+30	Pad 3: White	
+31	(skip)	
+32	(skip)	
+33	(skip)	
+34	(skip)	
+35	(skip)	
+36	Button on top of screen	button 0x40
+37	Button on top of screen	button 0x47
+38	(skip)	
+39	(skip)	
+40	(skip)	
+41	(skip)	
+42	(skip)	
+43	(skip)	
+44	Channel Button	button 0x07
+45	Plug-in button	button 0x00
+46	arrange button	button 0x06
+47	(skip)	
+48	(skip)	
+49	(skip)	
+50	(skip)	
+51	(skip)	
+52	(skip)	
+53	(skip)	
+54	nothing?	
+55	nothing?	
+56	nothing?	
+57	nothing?	
+58	nothing?	
+57	nothing?	
+58	in 1	button 0x48
+59	in 2	button 0x49
+60	in 3	button 0x4a
+61	in 4	button 0x4b
+62	mst	button 0x4f
+63	grp	
+63	grp	button 0x4e
+64	snd	button 0x4d
+65	cue	knob 8,button 0x4c
+66	pad 9: red	
+67	pad 9: green	
+68	pad 9: blue	
+69	(skip)	
+70	(skip)	
+71	(skip)	
+72	(skip)	
+73	(skip)	
+74	(skip)	
+75	(skip)	
+76	(skip)	
+77	(skip)	
+78	(skip)	
+79	(skip)	
+80	(skip)	
+81	(skip)	
+82	(skip)	
+83	(skip)	
+84	(skip)	
+85	(skip)	
+86	(skip)	
+87	pad 16: red	pad 3
+68	Pad 9: blue	pad 4
+69	(skip)	
+70	(skip)	
+71	(skip)	
+72	(skip)	
+73	(skip)	
+74	(skip)	
+75	(skip)	
+76	(skip)	
+77	(skip)	
+78	(skip)	
+79	(skip)	
+80	(skip)	
+81	(skip)	
+82	(skip)	
+83	(skip)	
+84	(skip)	
+85	(skip)	
+86	(skip)	
+87	(skip)	
+88	(skip)	
+89	(skip)	
+90	pad 9: white	pad 4
+91	(skip)	
+92	(skip)	
+93	(skip)	
+94	(skip)	
+95	(skip)	
+96	(skip)	
+97	(skip)	
+98	copy	button 0x2b
+99	paste	button 0x28
+100	note	button 0x2f
+101	nudge	button 0x2c
+102	undo	button 0x2a
+103	redo	button 0x29
+104	quantize	button 0x2e
+105	clear	button 0x2d
+106	back	button 0x37
+107	(skip)	
+108	(skip)	
+109	(skip)	
+110	Group A: Red	
+111	Group A: Green	button 0x10
+112	Group A: Blue	
+113	Group B: Red	button 0x13
+114	(skip)	
+115	(skip)	
+116	(skip)	
+117	(skip)	
+118	(skip)	
+119	(skip)	
+120	(skip)	
+121	(skip)	
+122	Group E: Red	button 0x11
+123	(skip)	
+124	(skip)	
+125	(skip)	
+126	(skip)	
+127	(skip)	
+128	(skip)	
+129	(skip)	
+130	(skip)	
+131	(skip)	
+132	(skip)	
+133	(skip)	
+134	Group A: White	
+135	(skip)	
+136	(skip)	
+137	(skip)	
+138	(skip)	
+139	(skip)	
+140	(skip)	
+141	(skip)	
+142	Tap	button 0x08
+143	Step Mode	button 0x09
+144	Macro	button 0x0a
+145	Note Repeat	button 0x0b
+146	(skip)	
+147	(skip)	
+148	(skip)	
+149	(skip)	
+150	(skip)	
+151	(skip)	
+152	(skip)	
+153	(skip)	
+154	(skip)	
+155	(skip)	
+156	(skip)	
+157	(skip)	
+146	Restart	button 0x1c
+147	Metro	button 0x1f
+148	Events	
+149	(skip)	
+150	(skip)	
+151	(skip)	
+152	(skip)	
+153	(skip)	
+154	Scene	button 0x23
+155	Pattern	button 0x22
+156	Pad Mode	button 0x21
+157	Navigate	button 0x20
+158	Duplicate	button 0x27
+159	Select	button 0x26
+160	Solo	button 0x25
+161	Mute	button 0x24
+162	Left vu: 1 line	
+162	Left VU: Line 1	
+163	Left VU: Line 2	
+164	etc	
+165	etc	
+166	etc	
+167	etc	
+168	(skip)	
+169	(skip)	
+170	(skip)	
+171	(skip)	
+172	(skip)	
+173	(skip)	
+174	(skip)	
+175	(skip)	
+176	(skip)	
+177	Left VU: Last Line (the red one)	
+178	Right VU: First One	
+179	(skip)	
+180	(skip)	
+181	(skip)	
+182	(skip)	
+183	(skip)	
+184	(skip)	
+185	(skip)	
+186	(skip)	
+187	(skip)	
+188	(skip)	
+189	(skip)	
+190	(skip)	
+191	(skip)	
+192	(skip)	
+193	Right VU: Last Line (The red one)	
+194	(skip)	
+195	(skip)	
+193	(skip)	
+194	Nothing immediately visible	
+195	Nothing immediately visible	
+196	EDIT-LABEL (jogwheel)	
+197	Channel-label (jogwheel)	
+198	Browser-label (jogwheel)	
+199	Tune-label(jogwheel)	
+200	swing-label (jogwheel)	
+201	volume-label (jogwheel)	
+202	Jogwheel: top	
+203	Jogwheel one segment to the right of the top	
+204	jogwheel two segments to the right of the top	
+205	joghweel 3 segments to the right of the top	
+206	jogwheel: right	
+207	etc	
+208	etc	
+209	etc	
+210	etc	
+211	etc	
+212	etc	
+212	(skip)	
+212	(skip)	
+212	(skip)	
+212	(skip)	
+212	(skip)	
+212	(skip)	
+212	(skip)	
+212	(skip)	
+212	(skip)	
+212	(skip)	
+212	(skip)	
+212	(skip)	
+212	(skip)	
+212	(skip)	
+212	(skip)	
+212	(skip)	
+212	(skip)	
+211	(skip)	
+212	(skip)	
+212	(skip)	
+209	(skip)	
+210	(skip)	
+211	(skip)	
+212	(skip)	
+212	(skip)	
+212	(skip)	
+212	(skip)	
+212	one segment before the left segment of the jogwheel. note that if this is indeed the last one, we cannot address the segments from the left to the top. maybe there is something fancy with masking going on here	

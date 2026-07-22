@@ -1,0 +1,10 @@
+# build.sh output
+/build/
+
+# Xcode
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xcworkspace/xcuserdata/
+.DS_Store
+.debug-agents/

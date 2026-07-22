@@ -1,6 +1,11 @@
 Macchina
 ========
 
+> **Note:** this README describes the original 2012 MK1 code (`NICommon/`,
+> `MacchinaClient/`, `MacchinaServer/`). The current work — a v3/NHL2 client that fully
+> drives a **Maschine Studio** (displays, LEDs, input) — lives under **[`new/`](new/)**.
+> See [`new/README.md`](new/README.md) and [`CLAUDE.md`](CLAUDE.md).
+
 This is my experimentation about reverse engineering the Native Instruments Maschine.
 
 The Maschine is a combination of a rhythm oriented software sampler, and a custom USB
