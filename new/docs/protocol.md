@@ -252,9 +252,14 @@ Legacy (MK1): `NILedState` is a flat intensity map (`setLed:intensity:` /
 `getLedIntensity:`), serialized by `dataRepresentation` and shipped in
 `NISetLedStateMessage` as `[u32 msgid][u32 n=57][57 level bytes]`.
 
-**Maschine Studio, v3 (live-verified 2026-07):** the LED-set message is
-`[u32 msgid = 0x036c7500][213 raw level bytes]` — **no count field** (that's the MK1
-difference; adding `n` gets the frame dropped). One byte = one LED channel's intensity, with these live-verified traits:
+**Maschine Studio, v3 (live-verified 2026-07, CORRECTED):** the LED-set message is
+`[u32 msgid = 0x036c7500][u32 count = 213][213 level bytes]` — the count field **is
+required** (M2 sends it; the earlier "no count field" note here was wrong). Without it
+the buffer lands shifted **−4** on the device and the last 4 channels truncate — which
+is exactly the state the channel map below was probed in, so **the table below reads
++4 high; subtract 4 for true indices**. The authoritative un-shifted map is
+[reference/studio_led_map_decoded.md](reference/studio_led_map_decoded.md).
+One byte = one LED channel's intensity, with these live-verified traits:
 - **`0x00` = OFF** (level 0), `0x7f` = full. Writes always apply — `0` is NOT "no change".
   Verified: `all 0x7f` then set one channel `0x00` → that LED goes dark. (Earlier "0 = no
   change" notes were wrong — an artifact of a stale second client and the dedup below.)
@@ -275,6 +280,13 @@ them to USB as **four HID reports**: `0x80` (channels 0–61), `0x81` (62–105)
 `in`/`out1..3` LEDs are the **MIDI** in/out status LEDs (the Studio has MIDI I/O, no
 audio interface), driven separately and outside these 213 channels.
 ### Studio LED channel map (live-mapped 2026-07, via `LedProbe`/`LedPoke`)
+
+⚠️ **Probed without the count field — every channel below is +4 high** (see above).
+Prefer [reference/studio_led_map_decoded.md](reference/studio_led_map_decoded.md):
+the `s_ledToNHLMap` dump joined with M2's official `LED_*` enum order, which also
+decoded (2026-07-22): **white channels** for pads (true ch 24–31 / 86–93) and groups
+(130–137), the jog **labels** at true 192–197 (separate from the ring at 198–212),
+Prev/Next at 103/104, Auto at 49, and `LED_ENTER` at 105 (wheel push? 🟡).
 
 RGB elements are 3 consecutive channels in **R, G, B** order; the rest are mono.
 
@@ -318,7 +330,7 @@ Studio v3 message ids + record layouts (live-verified 2026-07):
 | msgId | control | record | notes |
 |---|---|---|---|
 | `0x03504e00` | **Pads** | `u32 padId · u32 state · f32 pressure` | padId 0–15; state `1`=hit `4`=pressure `3`=release; pressure 0.0–1.0 |
-| `0x03734e00` | **Switches** | `u32 switchId · f32 state` | buttons AND touch-sensitive knob touch-sensors; state `1.0`=down `0.0`=up. PLAY=`0x1d`; a knob touch seen as `0x58` |
+| `0x03734e00` | **Switches** | `u32 switchId · u32 state` | buttons AND touch-sensitive knob touch-sensors; **bit 0 of state = down** (live capture 2026-07: press `0x3f800b01`, release `0x3f800b00`). The boh upper bytes look like an f32 `1.0` with unknown bits `0x0b` mixed in ❓ — the earlier "f32 `1.0`=down `0.0`=up" reading was wrong (≥0.5 on both made releases decode as down). PLAY=`0x1d`; a knob touch seen as `0x58` |
 | `0x03654e00` | **Knobs** (touch encoders, no detents) | `u32 id · f32 delta` | fine continuous deltas (~0.005/tick) |
 | `0x03774e00` | **Big wheel** (detented) | `u32 id · i32 delta` | discrete integer step per notch (+1/-1) |
 

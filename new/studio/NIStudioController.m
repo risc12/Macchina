@@ -322,10 +322,13 @@ static NSData * ByteSwapped565(NSData * pixels)
             {
                 if (![d respondsToSelector:@selector(studioController:buttonId:down:)])
                     continue;
-                uint32_t id_; float state;
+                uint32_t id_, state;
                 memcpy(&id_,   rec + 0, 4);
                 memcpy(&state, rec + 4, 4);
-                [d studioController:self buttonId:id_ down:(state >= 0.5f)];
+                // NOT an f32 (that read every release as down): live capture
+                // 2026-07 shows press 0x3f800b01 / release 0x3f800b00 — bit 0
+                // is the button, the boh upper bytes ≈ f32 1.0 + unknown 0x0b.
+                [d studioController:self buttonId:id_ down:(state & 1) != 0];
             }
             break;
 

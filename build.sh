@@ -12,8 +12,9 @@
 # The project is ARC, Foundation-only, deployment target 10.7.
 #
 # Usage:
-#   ./build.sh              # build the new/ Studio targets (default)
-#   ./build.sh all          # v3 targets + legacy client/server
+#   ./build.sh              # build the new/ Studio targets + new-cpp/ (default)
+#   ./build.sh cpp          # just the new-cpp/ C++ targets
+#   ./build.sh all          # v3 targets + new-cpp/ + legacy client/server
 #   ./build.sh studio       # new/clients/StudioDemo -> build/StudioDemo
 #   ./build.sh ledprobe     # new/tools/LedProbe    -> build/LedProbe
 #   ./build.sh ledpoke      # new/tools/LedPoke     -> build/LedPoke
@@ -34,6 +35,56 @@ LEGACYCFLAGS=(-fobjc-arc -x objective-c -INICommon -Wall -mmacosx-version-min=10
 CORE_SRC=(new/core/*.m)
 STUDIO_SRC=(new/studio/*.m)
 COMMON_SRC=(NICommon/*.m)
+
+# new-cpp/ — the C++20 port (CoreFoundation-only, no ObjC). See new-cpp/README.md.
+CPPFLAGS=(-std=c++20 -Wall -Inew-cpp -mmacosx-version-min=10.13)
+CPP_CORE_SRC=(new-cpp/core/transport/*.cpp new-cpp/core/transport-macos/*.cpp
+              new-cpp/core/protocol/*.cpp new-cpp/core/client/*.cpp)
+CPP_STUDIO_SRC=(new-cpp/studio/*.cpp)
+CPP_GFX_SRC=(new-cpp/gfx/*.cpp)
+
+build_cpp () {
+  local name="$1" main="$2"
+  echo "==> Building $name (new-cpp/core + new-cpp/studio)"
+  clang++ "${CPPFLAGS[@]}" -framework CoreFoundation \
+    "${CPP_CORE_SRC[@]}" "${CPP_STUDIO_SRC[@]}" "${CPP_GFX_SRC[@]}" "$main" -o "$OUT/$name"
+  echo "    -> $OUT/$name"
+}
+
+build_cpp_all () {
+  build_cpp HandshakeSmoke new-cpp/tools/HandshakeSmoke/main.cpp
+  build_cpp StudioDemoCpp  new-cpp/clients/StudioDemo/main.cpp
+  build_cpp StudioProbe    new-cpp/clients/StudioProbe/main.cpp
+  build_cpp HelloScreen    new-cpp/clients/HelloScreen/main.cpp
+  build_cpp Showcase       new-cpp/clients/Showcase/main.cpp
+}
+
+# compile_commands.json for clangd (nvim/VSCode LSP). Regenerate after
+# adding/removing source files: ./build.sh compdb
+compdb () {
+  echo "==> Generating compile_commands.json"
+  local dir; dir="$(pwd)"
+  {
+    echo "["
+    local first=1 f
+    for f in "${CPP_CORE_SRC[@]}" "${CPP_STUDIO_SRC[@]}" "${CPP_GFX_SRC[@]}" new-cpp/tools/*/main.cpp new-cpp/clients/*/main.cpp; do
+      [ $first -eq 1 ] || echo ","
+      first=0
+      printf '  {"directory": "%s",\n   "file": "%s",\n   "arguments": ["clang++"' "$dir" "$f"
+      local a; for a in "${CPPFLAGS[@]}" -c "$f"; do printf ', "%s"' "$a"; done
+      printf ']}'
+    done
+    for f in "${CORE_SRC[@]}" "${STUDIO_SRC[@]}" new/clients/*/main.m new/tools/*/main.m; do
+      echo ","
+      printf '  {"directory": "%s",\n   "file": "%s",\n   "arguments": ["clang"' "$dir" "$f"
+      local a; for a in "${NEWCFLAGS[@]}" -c "$f"; do printf ', "%s"' "$a"; done
+      printf ']}'
+    done
+    echo
+    echo "]"
+  } > compile_commands.json
+  echo "    -> compile_commands.json ($(grep -c '"file"' compile_commands.json) entries)"
+}
 
 # A new/ target = core + studio + one main.m.
 build_new () {
@@ -73,11 +124,14 @@ syntax_check () {
 }
 
 case "${1:-new}" in
-  new)        build_new_all ;;
+  new)        build_new_all; build_cpp_all ;;
   studio)    build_new StudioDemo new/clients/StudioDemo/main.m ;;
   ledprobe)  build_new LedProbe   new/tools/LedProbe/main.m ;;
   ledpoke)   build_new LedPoke    new/tools/LedPoke/main.m ;;
   hiaclient) build_new HIAClient  new/tools/HIAClient/main.m ;;
+  cpp)       build_cpp_all ;;
+  sc)        build_cpp Showcase       new-cpp/clients/Showcase/main.cpp ;;
+  compdb)    compdb ;;
   legacy)
     build_legacy MacchinaClient MacchinaClient/main.m
     build_legacy MacchinaServer MacchinaServer/main.m
@@ -85,10 +139,11 @@ case "${1:-new}" in
   check)     syntax_check ;;
   all)
     build_new_all
+    build_cpp_all
     build_legacy MacchinaClient MacchinaClient/main.m
     build_legacy MacchinaServer MacchinaServer/main.m
     ;;
-  *) echo "usage: $0 [new|all|studio|ledprobe|ledpoke|hiaclient|legacy|check]" >&2; exit 2 ;;
+  *) echo "usage: $0 [new|all|cpp|compdb|studio|ledprobe|ledpoke|hiaclient|legacy|check]" >&2; exit 2 ;;
 esac
 
 echo "Done."

@@ -1,0 +1,88 @@
+# MaschineStudio — device-verified control map (from our on-hardware probe)
+# channel = true LED byte index (0..212) in the 213-byte LED buffer.
+# input_id = id seen in the input event when that control is pressed/turned.
+# channel	description	input_id
+0	Pad 1: Red	pad 12
+1	Pad 1: Green	pad 12
+2	Pad 1: Blue	pad 12
+3	Pad 2: Red	pad 13
+4	Pad 2: Green	
+5	Pad 2: Blue	
+6	Pad 3: Red	
+24	Pad 1: White	
+25	Pad 2: White	
+26	Pad 3: White	
+32	Button on top of screen	button 0x40
+33	Button on top of screen	button 0x47
+40	Channel Button	button 0x07
+41	Plug-in button	button 0x00
+42	arrange button	button 0x06
+54	in 1	button 0x48
+55	in 2	button 0x49
+56	in 3	button 0x4a
+57	in 4	button 0x4b
+58	mst	button 0x4f
+59	grp	button 0x4e
+60	snd	button 0x4d
+61	cue	knob 8,button 0x4c
+62	pad 9: red	
+63	pad 9: green	
+64	Pad 9: blue	pad 4
+83	pad 16: red	pad 3
+86	pad 9: white	pad 4
+94	copy	button 0x2b
+95	paste	button 0x28
+96	note	button 0x2f
+97	nudge	button 0x2c
+98	undo	button 0x2a
+99	redo	button 0x29
+100	quantize	button 0x2e
+101	clear	button 0x2d
+102	back	button 0x37
+106	Group A: Red	
+107	Group A: Green	button 0x10
+108	Group A: Blue	
+109	Group B: Red	button 0x13
+118	Group E: Red	button 0x11
+130	Group A: White	
+138	Tap	button 0x08
+139	Step Mode	button 0x09
+140	Macro	button 0x0a
+141	Note Repeat	button 0x0b
+142	Restart	button 0x1c
+143	Metro	button 0x1f
+144	Events	
+150	Scene	button 0x23
+151	Pattern	button 0x22
+152	Pad Mode	button 0x21
+153	Navigate	button 0x20
+154	Duplicate	button 0x27
+155	Select	button 0x26
+156	Solo	button 0x25
+157	Mute	button 0x24
+158	Left vu: 1 line	
+159	Left VU: Line 2	
+160	etc	
+161	etc	
+162	etc	
+163	etc	
+173	Left VU: Last Line (the red one)	
+174	Right VU: First One	
+189	Right VU: Last Line (The red one)	
+192	EDIT-LABEL (jogwheel)	
+193	Channel-label (jogwheel)	
+194	Browser-label (jogwheel)	
+195	Tune-label(jogwheel)	
+196	swing-label (jogwheel)	
+197	volume-label (jogwheel)	
+198	Jogwheel: top	
+199	Jogwheel one segment to the right of the top	
+200	jogwheel two segments to the right of the top	
+201	joghweel 3 segments to the right of the top	
+202	jogwheel: right	
+203	etc	
+204	etc	
+205	etc	
+206	etc	
+207	etc	
+208	one segment before the left segment of the jogwheel. note that if this is indeed the last one, we cannot address the segments from the left to the top. maybe there is something fancy with masking going on here	
