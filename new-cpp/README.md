@@ -71,6 +71,16 @@ gfx/                   host-side rasterizer, pure pixels (no transport, no
                        screens are dumb framebuffers — M2 rasterizes host-side
                        too (new/docs/rendering-pipeline.md).
                                                         (namespace macchina::gfx)
+daemon/                macchinad → build/macchinad — owns the device, exposes
+                       it on udp://127.0.0.1:7000 (MACCHINA_OSC_PORT): /led,
+                       /pad/rgb, /vu, /ring, /display/* in; /event/* out to
+                       the subscriber. The full address list is the header
+                       comment in daemon/main.cpp. Studio-specific for now.
+daemon/osc/            minimal OSC 1.0 codec (messages, i/f/s/b args). Pure
+                       data, no sockets.                (namespace macchina::osc)
+daemon/ableton/        the Ableton Live Remote Script (Live 11/12) — a thin
+   Macchina/           OSC client of macchinad: transport + master volume +
+                       tempo on the wheel, VU + HUD on the hardware.
 clients/               runnable apps (StudioDemo → build/StudioDemoCpp,
                        StudioProbe → build/StudioProbe,
                        HelloScreen → build/HelloScreen — text on glass,
@@ -79,10 +89,27 @@ clients/               runnable apps (StudioDemo → build/StudioDemoCpp,
 tools/                 runnable probes (HandshakeSmoke).
 ```
 
-Planned next: `daemon/` (owns one Controller, exposes it over a socket/OSC).
 The `core/` ↔ `studio/` rule from CLAUDE.md carries over: anything with a
 channel number, product id `0x1300`, or RGB565 in it belongs in `studio/`,
-never `core/`.
+never `core/`. The daemon touches the device only through `core/Controller.hpp`
++ the `StudioLayout` vocabulary (which doubles as the OSC name space).
+
+## The Ableton integration
+
+```
+Live 12 ── Remote Script (python, UDP) ──> macchinad ──> NIHardwareAgent ──> Studio
+```
+
+1. `./build.sh cpp && ./build/macchinad` (needs the agent + device, as always)
+2. `cp -r new-cpp/daemon/ableton/Macchina ~/Music/Ableton/User\ Library/Remote\ Scripts/`
+3. Live > Settings > Link/Tempo/MIDI > Control Surface: **Macchina**
+   (input/output: None)
+
+Play/Rec/Restart/Metro drive the transport (LEDs follow Live's state), the
+master encoder is master volume, the wheel is tempo (push = 0.1 BPM steps),
+the hardware VUs show Live's master meters, and the left screen is a
+tempo/position HUD. Quit Live (or unload the script) and macchinad keeps
+running for the next front-end.
 
 ## Build & run
 

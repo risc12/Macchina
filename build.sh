@@ -42,12 +42,14 @@ CPP_CORE_SRC=(new-cpp/core/transport/*.cpp new-cpp/core/transport-macos/*.cpp
               new-cpp/core/protocol/*.cpp new-cpp/core/client/*.cpp)
 CPP_STUDIO_SRC=(new-cpp/studio/*.cpp)
 CPP_GFX_SRC=(new-cpp/gfx/*.cpp)
+CPP_OSC_SRC=(new-cpp/daemon/osc/*.cpp)
 
 build_cpp () {
   local name="$1" main="$2"
   echo "==> Building $name (new-cpp/core + new-cpp/studio)"
   clang++ "${CPPFLAGS[@]}" -framework CoreFoundation \
-    "${CPP_CORE_SRC[@]}" "${CPP_STUDIO_SRC[@]}" "${CPP_GFX_SRC[@]}" "$main" -o "$OUT/$name"
+    "${CPP_CORE_SRC[@]}" "${CPP_STUDIO_SRC[@]}" "${CPP_GFX_SRC[@]}" "${CPP_OSC_SRC[@]}" \
+    "$main" -o "$OUT/$name"
   echo "    -> $OUT/$name"
 }
 
@@ -57,6 +59,7 @@ build_cpp_all () {
   build_cpp StudioProbe    new-cpp/clients/StudioProbe/main.cpp
   build_cpp HelloScreen    new-cpp/clients/HelloScreen/main.cpp
   build_cpp Showcase       new-cpp/clients/Showcase/main.cpp
+  build_cpp macchinad      new-cpp/daemon/main.cpp
 }
 
 # compile_commands.json for clangd (nvim/VSCode LSP). Regenerate after
@@ -67,7 +70,8 @@ compdb () {
   {
     echo "["
     local first=1 f
-    for f in "${CPP_CORE_SRC[@]}" "${CPP_STUDIO_SRC[@]}" "${CPP_GFX_SRC[@]}" new-cpp/tools/*/main.cpp new-cpp/clients/*/main.cpp; do
+    for f in "${CPP_CORE_SRC[@]}" "${CPP_STUDIO_SRC[@]}" "${CPP_GFX_SRC[@]}" "${CPP_OSC_SRC[@]}" \
+             new-cpp/tools/*/main.cpp new-cpp/clients/*/main.cpp new-cpp/daemon/main.cpp; do
       [ $first -eq 1 ] || echo ","
       first=0
       printf '  {"directory": "%s",\n   "file": "%s",\n   "arguments": ["clang++"' "$dir" "$f"
