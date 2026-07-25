@@ -6,6 +6,7 @@
 #include "gfx/Surface.hpp"
 
 #include <algorithm>
+#include <cmath>
 
 namespace macchina::gfx {
 
@@ -81,7 +82,7 @@ constexpr Glyph kFont[] = {
     { '%', { 0b11001,0b11010,0b00010,0b00100,0b01000,0b01011,0b10011 } },
 };
 // Unknown characters: hollow box.
-constexpr uint8_t kBoxGlyph[7] = { 0b11111,0b10001,0b10001,0b10001,0b10001,0b10001,0b11111 };
+constexpr uint8_t kBoxGlyph[7] = { 0b11111,0b10001,0b10001,0b10101,0b10001,0b10001,0b11111 };
 // clang-format on
 
 const uint8_t * glyphRows(char ch)
@@ -113,34 +114,57 @@ void Surface::fillRect(int x, int y, int w, int h, uint16_t color)
             pixels[(size_t)yy * width + xx] = color;
 }
 
-void Surface::drawChar(int x, int y, char ch, uint16_t color, int scale)
+namespace {
+
+// Cell boundary along one axis, rounded independently per index so that
+// consecutive cells (i, i+1) always share an edge — no gaps or overlaps even
+// when `scale` is fractional (e.g. 1.5).
+int cellEdge(int origin, int i, float scale)
+{
+    return origin + (int)std::lround(i * (double)scale);
+}
+
+} // namespace
+
+void Surface::drawChar(int x, int y, char ch, uint16_t color, float scale)
 {
     const uint8_t * rows = glyphRows(ch);
     for (int r = 0; r < kGlyphH; r++)
         for (int c = 0; c < kGlyphW; c++)
             if (rows[r] & (1 << (kGlyphW - 1 - c)))
-                fillRect(x + c * scale, y + r * scale, scale, scale, color);
+            {
+                int x0 = cellEdge(x, c, scale), x1 = cellEdge(x, c + 1, scale);
+                int y0 = cellEdge(y, r, scale), y1 = cellEdge(y, r + 1, scale);
+                fillRect(x0, y0, x1 - x0, y1 - y0, color);
+            }
 }
 
-void Surface::drawText(int x, int y, std::string_view text, uint16_t color, int scale)
+void Surface::drawText(int x, int y, std::string_view text, uint16_t color, float scale)
 {
+    double xf = x;
     for (char ch : text)
     {
-        drawChar(x, y, ch, color, scale);
-        x += (kGlyphW + kSpacing) * scale;
+        drawChar((int)std::lround(xf), y, ch, color, scale);
+        xf += (kGlyphW + kSpacing) * (double)scale;
     }
 }
 
-int Surface::textWidth(std::string_view text, int scale)
+int Surface::textWidth(std::string_view text, float scale)
 {
     if (text.empty())
         return 0;
-    return ((int)text.size() * (kGlyphW + kSpacing) - kSpacing) * scale;
+    // Mirrors drawText/drawChar's actual rounding steps (cursor rounded per
+    // character, glyph width rounded via cellEdge) rather than a closed-form
+    // guess — a single round of the whole-string formula can be off by a
+    // pixel from what's actually drawn, since round(a)+round(b) != round(a+b).
+    double advance    = (kGlyphW + kSpacing) * (double)scale;
+    int    lastOrigin = (int)std::lround((double)(text.size() - 1) * advance);
+    return lastOrigin + (int)std::lround(kGlyphW * (double)scale);
 }
 
-int Surface::textHeight(int scale)
+int Surface::textHeight(float scale)
 {
-    return kGlyphH * scale;
+    return (int)std::lround(kGlyphH * (double)scale);
 }
 
 } // namespace macchina::gfx

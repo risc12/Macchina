@@ -38,16 +38,18 @@ struct Surface
     void clear(uint16_t color);
     void fillRect(int x, int y, int w, int h, uint16_t color);
 
-    /// Draw one 5×7 glyph at pixel scale `scale` (each font pixel becomes a
-    /// scale×scale block). Unknown characters render as a hollow box.
-    void drawChar(int x, int y, char ch, uint16_t color, int scale = 1);
+    /// Draw one 5×7 glyph at pixel scale `scale` (each font pixel becomes an
+    /// approximately scale×scale block; fractional scale is rounded per cell
+    /// boundary so adjacent glyph pixels still tile without gaps/overlap).
+    /// Unknown characters render as a hollow box.
+    void drawChar(int x, int y, char ch, uint16_t color, float scale = 1);
 
     /// Left-aligned text, 1 font-pixel spacing between glyphs.
-    void drawText(int x, int y, std::string_view text, uint16_t color, int scale = 1);
+    void drawText(int x, int y, std::string_view text, uint16_t color, float scale = 1);
 
     /// Width/height in pixels that drawText will cover — for centering.
-    static int textWidth(std::string_view text, int scale = 1);
-    static int textHeight(int scale = 1);
+    static int textWidth(std::string_view text, float scale = 1);
+    static int textHeight(float scale = 1);
 };
 
 } // namespace macchina::gfx
