@@ -17,6 +17,16 @@ namespace {
 
 // clang-format off
 constexpr std::array kControls = std::to_array<ControlInfo>({
+    // --- Knobs, unofficial ----------------------------------------------------
+    { "Knob 1",    "_KNOB_1",            0x00,  -1, false },
+    { "Knob 2",    "_KNOB_2",            0x01,  -1, false },
+    { "Knob 3",    "_KNOB_3",            0x02,  -1, false },
+    { "Knob 4",    "_KNOB_4",            0x03,  -1, false },
+    { "Knob 5",    "_KNOB_5",            0x04,  -1, false },
+    { "Knob 6",    "_KNOB_6",            0x05,  -1, false },
+    { "Knob 7",    "_KNOB_7",            0x06,  -1, false },
+    { "Knob 8",    "_KNOB_8",            0x07,  -1, false },
+
     // --- buttons above the screens (mono, ch 32–39; ids captured live
     //     2026-07-22, left-to-right sweep — scan order, not spatial) ----------
     { "Screen 1",    "SCREEN_1",         0x40,  32, false },
@@ -156,6 +166,15 @@ const ControlInfo * controlForButton(uint32_t buttonId)
             return &c;
     return nullptr;
 }
+
+const ControlInfo * controlByM2Name(std::string_view name) {
+  for (const auto & c : studio::controls())
+    if (c.m2Name == name)
+      return &c;
+
+  return nullptr;
+}
+
 
 int padIndexForInputId(uint32_t padId)
 {

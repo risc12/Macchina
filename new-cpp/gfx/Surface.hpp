@@ -36,7 +36,9 @@ struct Surface
     Surface(int w, int h, uint16_t fill = 0) : width(w), height(h), pixels((size_t)w * h, fill) {}
 
     void clear(uint16_t color);
-    void fillRect(int x, int y, int w, int h, uint16_t color);
+    void fillRect(int x, int y, int w, int h, uint16_t fillColor);
+    void fillRect(int x, int y, int w, int h, uint16_t fillColor, uint16_t outlineColor);
+
 
     /// Draw one 5×7 glyph at pixel scale `scale` (each font pixel becomes an
     /// approximately scale×scale block; fractional scale is rounded per cell

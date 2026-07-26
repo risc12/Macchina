@@ -51,6 +51,7 @@ std::span<const ControlInfo> controls();
 
 /// The control a switch event belongs to; nullptr if unmapped.
 const ControlInfo * controlForButton(uint32_t buttonId);
+const ControlInfo * controlByM2Name(std::string_view name);
 
 /// Pads arrive as pad events, not switches. Maps the wire padId to the pad
 /// index 0–15 (pad 1–16 in Studio speak); −1 if out of range.

@@ -114,6 +114,19 @@ void Surface::fillRect(int x, int y, int w, int h, uint16_t color)
             pixels[(size_t)yy * width + xx] = color;
 }
 
+void Surface::fillRect(int x, int y, int w, int h, uint16_t fillColor, uint16_t outlineColor)
+{
+    int x0 = std::max(x, 0), y0 = std::max(y, 0);
+    int x1 = std::min(x + w, width), y1 = std::min(y + h, height);
+    for (int yy = y0; yy < y1; yy++)
+        for (int xx = x0; xx < x1; xx++)
+            if(xx == x || yy == y || xx == x + w - 1 || yy == y + h - 1 ) {
+                pixels[(size_t)yy * width + xx] = outlineColor;
+            } else {
+                pixels[(size_t)yy * width + xx] = fillColor;
+            }
+}
+
 namespace {
 
 // Cell boundary along one axis, rounded independently per index so that

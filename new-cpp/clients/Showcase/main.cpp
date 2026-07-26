@@ -192,7 +192,7 @@ const uint16_t kDim    = gfx::rgb565(50, 50, 50);
 void renderLeft(gfx::Surface & s, const State & st)
 {
     s.clear(kBlack);
-    s.drawText(8, 8, "MACCHINA SHOWCASE", kOrange, 2);
+    s.drawText(8, 8, "MACCHINA SHOWCASE", kOrange, 1.5);
     s.fillRect(0, 30, s.width, 2, kOrange);
 
     // Last event, as big as fits.

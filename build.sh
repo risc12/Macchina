@@ -21,6 +21,8 @@
 #   ./build.sh hiaclient    # new/tools/HIAClient   -> build/HIAClient
 #   ./build.sh legacy       # NICommon MacchinaClient + MacchinaServer
 #   ./build.sh check        # syntax-check every v3 source
+#   ./build.sh dev <Client> [args...]   # watch new-cpp/clients/<Client>/, rebuild
+#                                        # + restart on change (needs entr)
 #
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -59,6 +61,7 @@ build_cpp_all () {
   build_cpp StudioProbe    new-cpp/clients/StudioProbe/main.cpp
   build_cpp HelloScreen    new-cpp/clients/HelloScreen/main.cpp
   build_cpp Showcase       new-cpp/clients/Showcase/main.cpp
+  build_cpp DevTool        new-cpp/clients/DevTool/main.cpp
   build_cpp macchinad      new-cpp/daemon/main.cpp
 }
 
@@ -134,7 +137,6 @@ case "${1:-new}" in
   ledpoke)   build_new LedPoke    new/tools/LedPoke/main.m ;;
   hiaclient) build_new HIAClient  new/tools/HIAClient/main.m ;;
   cpp)       build_cpp_all ;;
-  sc)        build_cpp Showcase       new-cpp/clients/Showcase/main.cpp ;;
   compdb)    compdb ;;
   legacy)
     build_legacy MacchinaClient MacchinaClient/main.m
@@ -147,7 +149,22 @@ case "${1:-new}" in
     build_legacy MacchinaClient MacchinaClient/main.m
     build_legacy MacchinaServer MacchinaServer/main.m
     ;;
-  *) echo "usage: $0 [new|all|cpp|compdb|studio|ledprobe|ledpoke|hiaclient|legacy|check]" >&2; exit 2 ;;
+  # Internal: re-invoked by `dev` (below) inside entr's subshell, where the
+  # array vars (CPPFLAGS etc.) from the top of this script aren't inherited.
+  client-build)
+    build_cpp "$2" "new-cpp/clients/$2/main.cpp"
+    ;;
+  dev)
+    client="${2:?usage: $0 dev <ClientName> [client-args...]}"
+    main="new-cpp/clients/$client/main.cpp"
+    [ -f "$main" ] || { echo "no such client: $main" >&2; exit 2; }
+    command -v entr >/dev/null || { echo "entr not found — brew install entr" >&2; exit 2; }
+    shift 2
+    echo "==> dev: watching new-cpp/clients/$client/ — rebuild + restart on change (Ctrl-C to stop)"
+    find "new-cpp/clients/$client" -type f \( -name '*.cpp' -o -name '*.hpp' \) | \
+      entr -rn bash -c './build.sh client-build "$1" && exec "./'"$OUT"'/$1" "${@:2}"' _ "$client" "$@"
+    ;;
+  *) echo "usage: $0 [new|all|cpp|compdb|studio|ledprobe|ledpoke|hiaclient|legacy|check|dev]" >&2; exit 2 ;;
 esac
 
 echo "Done."
